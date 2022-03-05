@@ -54,39 +54,7 @@ class SimplePuzzleLayoutDelegate extends PuzzleLayoutDelegate {
 
   @override
   Widget backgroundBuilder(PuzzleState state) {
-    return Positioned(
-      right: 0,
-      bottom: 0,
-      child: ResponsiveLayoutBuilder(
-        small: (_, __) => SizedBox(
-          width: 184,
-          height: 118,
-          child: Image.asset(
-            'assets/images/simple_dash_small.png',
-            key: const Key('simple_puzzle_dash_small'),
-          ),
-        ),
-        medium: (_, __) => SizedBox(
-          width: 380.44,
-          height: 214,
-          child: Image.asset(
-            'assets/images/simple_dash_medium.png',
-            key: const Key('simple_puzzle_dash_medium'),
-          ),
-        ),
-        large: (_, __) => Padding(
-          padding: const EdgeInsets.only(bottom: 53),
-          child: SizedBox(
-            width: 568.99,
-            height: 320,
-            child: Image.asset(
-              'assets/images/simple_dash_large.png',
-              key: const Key('simple_puzzle_dash_large'),
-            ),
-          ),
-        ),
-      ),
-    );
+    return const Text('');
   }
 
   @override

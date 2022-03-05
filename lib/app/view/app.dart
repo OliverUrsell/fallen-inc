@@ -99,31 +99,11 @@ class _AppState extends State<App> {
         context,
       );
       precacheImage(
-        Image.asset('assets/images/logo_flutter_color.png').image,
-        context,
-      );
-      precacheImage(
-        Image.asset('assets/images/logo_flutter_white.png').image,
-        context,
-      );
-      precacheImage(
         Image.asset('assets/images/shuffle_icon.png').image,
         context,
       );
       precacheImage(
         Image.asset('assets/images/timer_icon.png').image,
-        context,
-      );
-      precacheImage(
-        Image.asset('assets/images/simple_dash_large.png').image,
-        context,
-      );
-      precacheImage(
-        Image.asset('assets/images/simple_dash_medium.png').image,
-        context,
-      );
-      precacheImage(
-        Image.asset('assets/images/simple_dash_small.png').image,
         context,
       );
       precacheImage(
