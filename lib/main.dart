@@ -1,5 +1,6 @@
 import 'package:fallen_inc/puzzle/Block.dart';
 import 'package:fallen_inc/puzzle/Puzzle.dart';
+import 'package:fallen_inc/puzzle/player.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -35,13 +36,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Puzzle(sizeX: 5, sizeY: 5, sizeRatio: 0.4, initialBlocks: [
-          [Block(color: Colors.blue, movable: false,), Block(), null, Block(), Block()],
-          [Block(), Block(), Block(), Block(), Block()],
-          [Block(), Block(), null, Block(), Block()],
-          [Block(), Block(), Block(), Block(), Block()],
-          [Block(), Block(), Block(), Block(), Block()],
-        ],),
+        child: Puzzle(sizeX: 5, sizeY: 5, sizeRatio: 0.4, mode:PuzzleMode.player,
+          initialBlocks: [
+            [Block(color: Colors.blue, movable: false,), Block(), null, Block(), Block()],
+            [Block(), Block(), Block(), Block(), Block()],
+            [Block(), Block(), null, Block(), Block()],
+            [Block(), Block(), Block(), Block(), Block()],
+            [Block(), Block(), Block(), Block(), Block()],
+          ],
+          player: Player(),
+        ),
       ),
     );
   }

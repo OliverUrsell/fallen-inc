@@ -1,9 +1,15 @@
 
+import 'package:fallen_inc/puzzle/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'Block.dart';
 import 'BlockWidget.dart';
+
+enum PuzzleMode{
+  slider,
+  player
+}
 
 class Puzzle extends StatefulWidget {
   const Puzzle({
@@ -11,12 +17,16 @@ class Puzzle extends StatefulWidget {
     required this.sizeX,
     required this.sizeY,
     required this.sizeRatio,
-    required this.initialBlocks
+    required this.initialBlocks,
+    required this.player,
+    required this.mode,
   }) : super(key: key);
 
   final int sizeX, sizeY;
   final double sizeRatio;
   final List<List<Block?>> initialBlocks;
+  final PuzzleMode mode;
+  final Player player;
 
   @override
   _PuzzleState createState() => _PuzzleState();
@@ -60,11 +70,15 @@ class _PuzzleState extends State<Puzzle> {
 
   Block? selectedBlock;
 
+  late Player player;
+
   @override
   void initState() {
     super.initState();
     blockPositions = widget.initialBlocks;
     blocks = getAllBlocks();
+    player = widget.player;
+    player.position = getBlockInPosition(0, widget.sizeY-1);
   }
 
   @override
@@ -81,6 +95,27 @@ class _PuzzleState extends State<Puzzle> {
     }
   }
 
+  bool playerUp() => movePlayer(0, -1);
+  bool playerDown() => movePlayer(0, 1);
+  bool playerLeft() => movePlayer(-1, 0);
+  bool playerRight() => movePlayer(1, 0);
+
+  bool movePlayer(int x, y) => setPlayerPosition(player.position!.x! + x, player.position!.y! + y);
+
+  bool setPlayerPosition(int x, y) {
+
+    if (x < 0 || x >= widget.sizeX || y < 0 || y >= widget.sizeY) return false;
+
+    Block? newPosition = getBlockInPosition(x, y);
+    if(newPosition == null) return false;
+
+    setState(() {
+      player.position = newPosition;
+    });
+
+    return true;
+  }
+
   bool selectedBlockUp() => moveSelectedBlock(0, -1);
   bool selectedBlockDown() => moveSelectedBlock(0, 1);
   bool selectedBlockLeft() => moveSelectedBlock(-1, 0);
@@ -88,27 +123,19 @@ class _PuzzleState extends State<Puzzle> {
 
   bool moveSelectedBlock(int x, y){
     // Adds x and y to the position of the selected block
-    if(selectedBlock == null) {
-      return false;
-    }
+    if(selectedBlock == null) return false;
 
-    if(!selectedBlock!.movable){
-      return false;
-    }
+    if(!selectedBlock!.movable) return false;
 
     return setBlockPosition(selectedBlock!, selectedBlock!.x! + x, selectedBlock!.y! + y);
   }
 
   bool setBlockPosition(Block block, int x, y) {
 
-    if (0 > x || x >= widget.sizeX || 0 > y || y >= widget.sizeY) {
-      return false;
-    }
+    if (0 > x || x >= widget.sizeX || 0 > y || y >= widget.sizeY) return false;
 
     // Returns False if the position isn't valid
-    if (getBlockInPosition(x, y) != null) {
-      return false;
-    }
+    if (getBlockInPosition(x, y) != null) return false;
 
     setState(() {
       blockPositions[block.y!][block.x!] = null;
@@ -162,14 +189,30 @@ class _PuzzleState extends State<Puzzle> {
           block.y = y;
           block.blockWidth = blockSize;
           block.blockHeight = blockSize;
-          block.onTap = blockOnTap;
+          block.onTap = widget.mode == PuzzleMode.slider ? blockOnTap : null;
           block.selected = false;
         }
       }
     }
 
-    if(selectedBlock != null){
-      selectedBlock!.selected = true;
+    if(selectedBlock != null) selectedBlock!.selected = true;
+
+    late final Map<Type, Action<Intent>>? actions;
+
+    if(widget.mode == PuzzleMode.slider){
+      actions = {
+        UpIntent: CallbackAction(onInvoke: (e) => selectedBlockUp()),
+        DownIntent: CallbackAction(onInvoke: (e) => selectedBlockDown()),
+        LeftIntent: CallbackAction(onInvoke: (e) => selectedBlockLeft()),
+        RightIntent: CallbackAction(onInvoke: (e) => selectedBlockRight()),
+      };
+    } else if (widget.mode == PuzzleMode.player) {
+      actions = {
+        UpIntent: CallbackAction(onInvoke: (e) => playerUp()),
+        DownIntent: CallbackAction(onInvoke: (e) => playerDown()),
+        LeftIntent: CallbackAction(onInvoke: (e) => playerLeft()),
+        RightIntent: CallbackAction(onInvoke: (e) => playerRight()),
+      };
     }
 
     return FocusableActionDetector(
@@ -184,23 +227,20 @@ class _PuzzleState extends State<Puzzle> {
         leftKeySet: LeftIntent(),
         rightKeySet: RightIntent(),
       },
-      actions: {
-        UpIntent: CallbackAction(onInvoke: (e) => selectedBlockUp()),
-        DownIntent: CallbackAction(onInvoke: (e) => selectedBlockDown()),
-        LeftIntent: CallbackAction(onInvoke: (e) => selectedBlockLeft()),
-        RightIntent: CallbackAction(onInvoke: (e) => selectedBlockRight()),
-      },
+      actions: actions,
       child: Builder(
         builder: (context) {
-          if (!_focusNode.hasFocus) {
-            FocusScope.of(context).requestFocus(_focusNode);
-          }
+          if (!_focusNode.hasFocus) FocusScope.of(context).requestFocus(_focusNode);
+
+          List<Widget> children = [];
+          children.addAll(getBlockWidgets());
+          children.add(player.getWidget());
 
           return SizedBox(
             width: blockSize * widget.sizeX,
             height: blockSize * widget.sizeY,
             child: Stack(
-                children: getBlockWidgets()
+                children: children,
             ),
           );
         },
