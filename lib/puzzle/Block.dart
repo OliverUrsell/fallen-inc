@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'BlockWidget.dart';
 
+class Walls{
+  final bool left, up, right, down;
+
+  const Walls({this.left=true, this.up=true, this.right=true, this.down=true});
+}
+
 class Block {
 
   double? blockWidth, blockHeight;
@@ -10,6 +16,8 @@ class Block {
   int? x, y;
 
   Color color;
+
+  Walls walls;
 
   bool selected, movable;
 
@@ -22,6 +30,7 @@ class Block {
     this.x,
     this.y,
     this.color=Colors.red,
+    this.walls=const Walls(),
     this.selected = false,
     this.onTap,
     this.movable = true,

@@ -95,10 +95,39 @@ class _PuzzleState extends State<Puzzle> {
     }
   }
 
-  bool playerUp() => movePlayer(0, -1);
-  bool playerDown() => movePlayer(0, 1);
-  bool playerLeft() => movePlayer(-1, 0);
-  bool playerRight() => movePlayer(1, 0);
+  bool playerUp() {
+    if (!player.position!.walls.up) return false;
+    if(player.position!.y! < 1) return false;
+    Block? newBlock = getBlockInPosition(player.position!.x!, player.position!.y! - 1);
+    if(newBlock == null) return false;
+    if(!newBlock.walls.down) return false;
+    return movePlayer(0, -1);
+  }
+
+  bool playerDown() {
+    if (!player.position!.walls.down) return false;
+    Block? newBlock = getBlockInPosition(player.position!.x!, player.position!.y! + 1);
+    if(newBlock == null) return false;
+    if(!newBlock.walls.up) return false;
+    return movePlayer(0, 1);
+  }
+
+  bool playerLeft() {
+    if (!player.position!.walls.left) return false;
+    if(player.position!.x! < 1) return false;
+    Block? newBlock = getBlockInPosition(player.position!.x!-1, player.position!.y!);
+    if(newBlock == null) return false;
+    if(!newBlock.walls.right) return false;
+    return movePlayer(-1, 0);
+  }
+
+  bool playerRight() {
+    if (!player.position!.walls.right) return false;
+    Block? newBlock = getBlockInPosition(player.position!.x!+1, player.position!.y!);
+    if(newBlock == null) return false;
+    if(!newBlock.walls.left) return false;
+    return movePlayer(1, 0);
+  }
 
   bool movePlayer(int x, y) => setPlayerPosition(player.position!.x! + x, player.position!.y! + y);
 

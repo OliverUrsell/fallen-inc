@@ -36,13 +36,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Puzzle(sizeX: 5, sizeY: 5, sizeRatio: 0.4, mode:PuzzleMode.player,
+        child: Puzzle(sizeX: 3, sizeY: 3, sizeRatio: 0.4, mode:PuzzleMode.player,
           initialBlocks: [
-            [Block(color: Colors.blue, movable: false,), Block(), null, Block(), Block()],
-            [Block(), Block(), Block(), Block(), Block()],
-            [Block(), Block(), null, Block(), Block()],
-            [Block(), Block(), Block(), Block(), Block()],
-            [Block(), Block(), Block(), Block(), Block()],
+            [Block(walls: const Walls(up:false, left: false)), Block(), Block(walls: const Walls(up:false, left: false))],
+            [Block(walls: const Walls(up:false, down: false)), Block(walls: const Walls(left:false, right: false)), Block(walls: const Walls(up:false, down: false))],
+            [Block(walls: const Walls(up:false, left: false)), Block(walls: const Walls(right:false, down: false)), null],
           ],
           player: Player(),
         ),
