@@ -53,6 +53,8 @@ class RightIntent extends Intent {}
 
 class _PuzzleState extends State<Puzzle> {
 
+  final FocusNode _focusNode = FocusNode();
+
   late List<List<Block?>> blockPositions;
   late List<Block> blocks;
 
@@ -63,6 +65,12 @@ class _PuzzleState extends State<Puzzle> {
     super.initState();
     blockPositions = widget.initialBlocks;
     blocks = getAllBlocks();
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   double getBlockSize(Size screenSize){
@@ -166,6 +174,7 @@ class _PuzzleState extends State<Puzzle> {
 
     return FocusableActionDetector(
       autofocus: true,
+      focusNode: _focusNode,
       shortcuts: {
         upArrowKeySet: UpIntent(),
         downArrowKeySet: DownIntent(),
@@ -182,12 +191,20 @@ class _PuzzleState extends State<Puzzle> {
         LeftIntent: CallbackAction(onInvoke: (e) => selectedBlockLeft()),
         RightIntent: CallbackAction(onInvoke: (e) => selectedBlockRight()),
       },
-      child: SizedBox(
-        width: blockSize * widget.sizeX,
-        height: blockSize * widget.sizeY,
-        child: Stack(
-          children: getBlockWidgets()
-        ),
+      child: Builder(
+        builder: (context) {
+          if (!_focusNode.hasFocus) {
+            FocusScope.of(context).requestFocus(_focusNode);
+          }
+
+          return SizedBox(
+            width: blockSize * widget.sizeX,
+            height: blockSize * widget.sizeY,
+            child: Stack(
+                children: getBlockWidgets()
+            ),
+          );
+        },
       ),
     );
   }
