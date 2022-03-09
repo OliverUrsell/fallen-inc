@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'Block.dart';
 import 'BlockWidget.dart';
@@ -20,6 +21,35 @@ class Puzzle extends StatefulWidget {
   @override
   _PuzzleState createState() => _PuzzleState();
 }
+
+final upArrowKeySet = LogicalKeySet(
+  LogicalKeyboardKey.arrowUp,
+);
+final downArrowKeySet = LogicalKeySet(
+  LogicalKeyboardKey.arrowDown,
+);
+final leftArrowKeySet = LogicalKeySet(
+  LogicalKeyboardKey.arrowLeft,
+);
+final rightArrowKeySet = LogicalKeySet(
+  LogicalKeyboardKey.arrowRight, 
+);
+final upKeySet = LogicalKeySet(
+  LogicalKeyboardKey.keyW,
+);
+final downKeySet = LogicalKeySet(
+  LogicalKeyboardKey.keyS,
+);
+final leftKeySet = LogicalKeySet(
+  LogicalKeyboardKey.keyA,
+);
+final rightKeySet = LogicalKeySet(
+  LogicalKeyboardKey.keyD,
+);
+class UpIntent extends Intent {}
+class DownIntent extends Intent {}
+class LeftIntent extends Intent {}
+class RightIntent extends Intent {}
 
 class _PuzzleState extends State<Puzzle> {
 
@@ -43,16 +73,37 @@ class _PuzzleState extends State<Puzzle> {
     }
   }
 
+  bool selectedBlockUp() => moveSelectedBlock(0, -1);
+  bool selectedBlockDown() => moveSelectedBlock(0, 1);
+  bool selectedBlockLeft() => moveSelectedBlock(-1, 0);
+  bool selectedBlockRight() => moveSelectedBlock(1, 0);
+
+  bool moveSelectedBlock(int x, y){
+    // Adds x and y to the position of the selected block
+    if(selectedBlock == null) {
+      return false;
+    }
+
+    return setBlockPosition(selectedBlock!, selectedBlock!.x! + x, selectedBlock!.y! + y);
+  }
+
   bool setBlockPosition(Block block, int x, y) {
+
+    if (0 > x || x >= widget.sizeX || 0 > y || y >= widget.sizeY) {
+      return false;
+    }
+
     // Returns False if the position isn't valid
     if (getBlockInPosition(x, y) != null) {
       return false;
     }
 
-    blockPositions[block.y!][block.x!] = null;
-    blockPositions[y][x] = block;
-    block.x = x;
-    block.y = y;
+    setState(() {
+      blockPositions[block.y!][block.x!] = null;
+      blockPositions[y][x] = block;
+      block.x = x;
+      block.y = y;
+    });
 
     return true;
   }
@@ -60,8 +111,6 @@ class _PuzzleState extends State<Puzzle> {
   void blockOnTap(int blockX, blockY){
     setState(() {
       selectedBlock = getBlockInPosition(blockX, blockY);
-      print(selectedBlock!.x!.toString() + selectedBlock!.y!.toString());
-      setBlockPosition(selectedBlock!, selectedBlock!.x!, (selectedBlock!.y! - 1) % 4);
     });
   }
 
@@ -111,11 +160,30 @@ class _PuzzleState extends State<Puzzle> {
       selectedBlock!.selected = true;
     }
 
-    return SizedBox(
-      width: blockSize * widget.sizeX,
-      height: blockSize * widget.sizeY,
-      child: Stack(
-        children: getBlockWidgets()
+    return FocusableActionDetector(
+      autofocus: true,
+      shortcuts: {
+        upArrowKeySet: UpIntent(),
+        downArrowKeySet: DownIntent(),
+        leftArrowKeySet: LeftIntent(),
+        rightArrowKeySet: RightIntent(),
+        upKeySet: UpIntent(),
+        downKeySet: DownIntent(),
+        leftKeySet: LeftIntent(),
+        rightKeySet: RightIntent(),
+      },
+      actions: {
+        UpIntent: CallbackAction(onInvoke: (e) => selectedBlockUp()),
+        DownIntent: CallbackAction(onInvoke: (e) => selectedBlockDown()),
+        LeftIntent: CallbackAction(onInvoke: (e) => selectedBlockLeft()),
+        RightIntent: CallbackAction(onInvoke: (e) => selectedBlockRight()),
+      },
+      child: SizedBox(
+        width: blockSize * widget.sizeX,
+        height: blockSize * widget.sizeY,
+        child: Stack(
+          children: getBlockWidgets()
+        ),
       ),
     );
   }

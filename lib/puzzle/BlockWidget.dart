@@ -57,7 +57,7 @@ class _BlockWidgetState extends State<BlockWidget> {
       height: getHeight(),
       left: getLeft(),
       top: getTop(),
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 200),
       child: GestureDetector(
         onTap: () {
           if (widget.onTap != null) {
