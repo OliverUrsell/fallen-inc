@@ -68,7 +68,7 @@ class _BlockWidgetState extends State<BlockWidget> {
           width: getWidth(),
           height: getHeight(),
           decoration: BoxDecoration(
-            color: widget.selected ? widget.color:Colors.blue,
+            color: widget.color,
             border: Border.all(width: 3, color: widget.selected ? selectedBorder : defaultBorder),
           ),
         ),

@@ -111,8 +111,12 @@ class _PuzzleState extends State<Puzzle> {
       selectedBlock!.selected = true;
     }
 
-    return Stack(
-      children: getBlockWidgets()
+    return SizedBox(
+      width: blockSize * widget.sizeX,
+      height: blockSize * widget.sizeY,
+      child: Stack(
+        children: getBlockWidgets()
+      ),
     );
   }
 }

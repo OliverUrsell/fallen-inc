@@ -65,12 +65,14 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Puzzle(sizeX: 4, sizeY: 4, sizeRatio: 0.4, initialBlocks: [
-        [Block(), Block(), null, Block()],
-        [Block(), Block(), Block(), Block()],
-        [Block(), Block(), Block(), Block()],
-        [Block(), Block(), Block(), Block()],
-      ],),
+      body: Center(
+        child: Puzzle(sizeX: 4, sizeY: 4, sizeRatio: 0.4, initialBlocks: [
+          [Block(), Block(), null, Block()],
+          [Block(), Block(), Block(), Block()],
+          [Block(), Block(), Block(), Block()],
+          [Block(), Block(), Block(), Block()],
+        ],),
+      ),
     );
   }
 }
