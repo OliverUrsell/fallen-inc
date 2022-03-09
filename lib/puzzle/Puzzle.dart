@@ -173,7 +173,6 @@ class _PuzzleState extends State<Puzzle> {
     }
 
     return FocusableActionDetector(
-      autofocus: true,
       focusNode: _focusNode,
       shortcuts: {
         upArrowKeySet: UpIntent(),
