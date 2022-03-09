@@ -66,11 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Puzzle(sizeX: 4, sizeY: 4, sizeRatio: 0.4, initialBlocks: [
-          [Block(), Block(), null, Block()],
-          [Block(), Block(), Block(), Block()],
-          [Block(), Block(), Block(), Block()],
-          [Block(), Block(), Block(), Block()],
+        child: Puzzle(sizeX: 5, sizeY: 5, sizeRatio: 0.4, initialBlocks: [
+          [Block(color: Colors.blue, movable: false,), Block(), null, Block(), Block()],
+          [Block(), Block(), Block(), Block(), Block()],
+          [Block(), Block(), null, Block(), Block()],
+          [Block(), Block(), Block(), Block(), Block()],
+          [Block(), Block(), Block(), Block(), Block()],
         ],),
       ),
     );

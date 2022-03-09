@@ -84,6 +84,10 @@ class _PuzzleState extends State<Puzzle> {
       return false;
     }
 
+    if(!selectedBlock!.movable){
+      return false;
+    }
+
     return setBlockPosition(selectedBlock!, selectedBlock!.x! + x, selectedBlock!.y! + y);
   }
 

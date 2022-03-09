@@ -11,7 +11,7 @@ class Block {
 
   Color color;
 
-  bool selected;
+  bool selected, movable;
 
   Function(int, int)? onTap;
 
@@ -24,6 +24,7 @@ class Block {
     this.color=Colors.red,
     this.selected = false,
     this.onTap,
+    this.movable = true,
   });
 
   BlockWidget getBlockWidget(){
