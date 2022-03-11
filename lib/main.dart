@@ -1,5 +1,5 @@
-import 'package:fallen_inc/puzzle/Block.dart';
-import 'package:fallen_inc/puzzle/Puzzle.dart';
+import 'package:fallen_inc/puzzle/block.dart';
+import 'package:fallen_inc/puzzle/puzzle.dart';
 import 'package:fallen_inc/puzzle/player.dart';
 import 'package:flutter/material.dart';
 

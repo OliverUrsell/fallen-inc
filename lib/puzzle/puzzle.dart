@@ -3,8 +3,8 @@ import 'package:fallen_inc/puzzle/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'Block.dart';
-import 'BlockWidget.dart';
+import 'block.dart';
+import 'block_widget.dart';
 
 enum PuzzleMode{
   slider,

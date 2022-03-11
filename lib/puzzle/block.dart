@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'BlockWidget.dart';
+import 'block_widget.dart';
 
 class Walls{
   final bool left, up, right, down;
