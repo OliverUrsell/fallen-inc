@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +26,14 @@ class Player {
 
   double getTop(){
     return getHeight() * position!.y!;
+  }
+
+  Map toJson() => {
+    "position": jsonEncode(position)
+  };
+
+  factory Player.fromJson(dynamic json){
+    return Player(position: Block.fromJson(json["position"], (p0, p1) => null));
   }
 
   Widget getWidget() {

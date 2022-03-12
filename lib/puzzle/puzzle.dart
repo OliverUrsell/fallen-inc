@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:fallen_inc/puzzle/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -71,6 +73,18 @@ class _PuzzleState extends State<Puzzle> {
   Block? selectedBlock;
 
   late Player player;
+
+  Map toJson() => {
+    "blockPositions": jsonEncode(blockPositions),
+    "player": jsonEncode(player),
+  };
+
+  void fromJson(dynamic json){
+    setState(() {
+      blockPositions = json["blockPositions"];
+      player = Player.fromJson(json[player]);
+    });
+  }
 
   @override
   void initState() {

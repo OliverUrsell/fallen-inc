@@ -1,5 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
 import 'block_widget.dart';
 
@@ -7,6 +6,23 @@ class Walls{
   final bool left, up, right, down;
 
   const Walls({this.left=true, this.up=true, this.right=true, this.down=true});
+
+  Map toJson() => {
+    "left": left,
+    "up": up,
+    "right": right,
+    "down": down,
+  };
+
+  factory Walls.fromJSON(dynamic json){
+    return Walls(
+      left: json["left"] as bool,
+      up: json["up"] as bool,
+      right: json["right"] as bool,
+      down: json["down"] as bool,
+    );
+  }
+
 }
 
 class Block {
@@ -24,7 +40,6 @@ class Block {
   Function(int, int)? onTap;
 
   Block({
-    Key? key,
     this.blockWidth,
     this.blockHeight,
     this.x,
@@ -45,6 +60,31 @@ class Block {
       imagePath: imagePath,
       selected: selected,
       onTap: onTap,
+    );
+  }
+
+  Map toJson() => {
+    "blockWidth": blockWidth,
+    "blockHeight": blockHeight,
+    "x": x,
+    "y": y,
+    "imagePath": imagePath,
+    "walls": jsonEncode(walls),
+    "movable": movable,
+
+  };
+
+  factory Block.fromJson(dynamic json, Function(int, int)? onTap) {
+    return Block(
+      blockWidth: json["blockWidth"] as double?,
+      blockHeight: json["blockHeight"] as double?,
+      x: json["x"] as int?,
+      y: json["y"] as int?,
+      imagePath: json["imagePath"] as String,
+      walls: Walls.fromJSON(json["walls"]),
+      movable: json["movable"] as bool,
+      selected: false,
+      onTap: onTap
     );
   }
 
