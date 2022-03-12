@@ -1,6 +1,7 @@
 import 'package:fallen_inc/puzzle/block.dart';
 import 'package:fallen_inc/puzzle/puzzle.dart';
 import 'package:fallen_inc/puzzle/player.dart';
+import 'package:fallen_inc/puzzle/puzzle_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -30,20 +31,37 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+// class _MyHomePageState extends State<MyHomePage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const CharacterSelector();
+//   }
+// }
 
+
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Puzzle(sizeX: 3, sizeY: 3, sizeRatio: 0.4, mode:PuzzleMode.player,
-          initialBlocks: [
-            [Block(walls: const Walls(up:false, left: false)), Block(), Block(walls: const Walls(up:false, left: false))],
-            [Block(walls: const Walls(up:false, down: false)), Block(walls: const Walls(left:false, right: false)), Block(walls: const Walls(up:false, down: false))],
-            [Block(walls: const Walls(up:false, left: false)), Block(walls: const Walls(right:false, down: false)), null],
+    return PuzzlePage(
+      puzzle: Puzzle(sizeX: 3, sizeY: 3, sizeRatio: 0.4, mode:PuzzleMode.slider,
+        initialBlocks: [
+          [
+            Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false),),
+            Block(imagePath: "assets/Level1/FI_L1_down_right.png", movable: false),
+            Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false))
           ],
-          player: Player(),
-        ),
+          [
+            Block(imagePath: "assets/Level1/FI_L1_left_right_finished.png", walls: const Walls(up:false, down: false)),
+            Block(imagePath: "assets/Level1/F1_L1_up_down_finished.png", walls: const Walls(left:false, right: false)),
+            Block(imagePath: "assets/Level1/FI_L1_left_right_finished.png", walls: const Walls(up:false, down: false))
+          ],
+          [
+            Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false)),
+            Block(imagePath: "assets/Level1/FI_L1_up_left_finished.png", walls: const Walls(right:false, down: false)),
+            null
+          ],
+        ],
+        player: Player(),
       ),
     );
   }

@@ -15,7 +15,7 @@ class Block {
 
   int? x, y;
 
-  Color color;
+  String imagePath;
 
   Walls walls;
 
@@ -29,7 +29,7 @@ class Block {
     this.blockHeight,
     this.x,
     this.y,
-    this.color=Colors.red,
+    required this.imagePath,
     this.walls=const Walls(),
     this.selected = false,
     this.onTap,
@@ -42,7 +42,7 @@ class Block {
       blockHeight: blockHeight,
       x: x,
       y: y,
-      color: color,
+      imagePath: imagePath,
       selected: selected,
       onTap: onTap,
     );

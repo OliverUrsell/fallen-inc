@@ -7,7 +7,7 @@ class BlockWidget extends StatefulWidget {
 
   final int? x, y;
 
-  final Color color;
+  final String imagePath;
 
   final bool selected;
 
@@ -19,7 +19,7 @@ class BlockWidget extends StatefulWidget {
     this.blockHeight,
     this.x,
     this.y,
-    this.color=Colors.red,
+    required this.imagePath,
     this.selected = false,
     this.onTap,
   }) : super(key: key);
@@ -30,7 +30,7 @@ class BlockWidget extends StatefulWidget {
 
 class _BlockWidgetState extends State<BlockWidget> {
 
-  final Color defaultBorder = Colors.black;
+  final Color defaultBorder = Colors.transparent;
   final Color selectedBorder = Colors.blue;
 
   double getWidth(){
@@ -68,7 +68,7 @@ class _BlockWidgetState extends State<BlockWidget> {
           width: getWidth(),
           height: getHeight(),
           decoration: BoxDecoration(
-            color: widget.color,
+            image: DecorationImage(image: AssetImage(widget.imagePath)),
             border: Border.all(width: 3, color: widget.selected ? selectedBorder : defaultBorder),
           ),
         ),
