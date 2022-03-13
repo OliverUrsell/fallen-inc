@@ -69,6 +69,9 @@ class _CharacterSelectorState extends State<CharacterSelector> {
 
   @override
   Widget build(BuildContext context) {
+
+    Size screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -124,7 +127,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                                 "Choose your Character...",
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.syneMono(
-                                  fontSize: 32,
+                                  fontSize: screenSize.height/50,
                                   color: const Color.fromRGBO(53, 45, 107, 1)
                                 ),
                               ),
@@ -165,14 +168,14 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                                         children: [
                                           Text("Arella",
                                             style: GoogleFonts.syneMono(
-                                                fontSize: 32,
+                                                fontSize: screenSize.height/50,
                                                 color: const Color.fromRGBO(53, 45, 107, 1)
                                             ),
                                           ),
                                           Text("The secret agent who moves through the board to get to the goal",
                                             textAlign: TextAlign.center,
                                             style: GoogleFonts.syneMono(
-                                              fontSize: 24,
+                                              fontSize: screenSize.height/40,
                                               color: const Color.fromRGBO(227, 226, 179, 1),
                                             ),
                                           ),
@@ -227,14 +230,14 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                                         children: [
                                           Text("Sofia",
                                             style: GoogleFonts.syneMono(
-                                                fontSize: 32,
+                                                fontSize: screenSize.height/50,
                                                 color: const Color.fromRGBO(53, 45, 107, 1)
                                             ),
                                           ),
                                           Text("The tech genius who's helping Arella make her way through. She can't do it without you!",
                                             textAlign: TextAlign.center,
                                             style: GoogleFonts.syneMono(
-                                              fontSize: 24,
+                                              fontSize: screenSize.height/40,
                                               color: const Color.fromRGBO(227, 226, 179, 1),
                                             ),
                                           ),
@@ -256,7 +259,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                                   "Or Join A Game:",
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.syneMono(
-                                      fontSize: 48,
+                                      fontSize: screenSize.height/50,
                                       color: const Color.fromRGBO(53, 45, 107, 1)
                                   ),
                                 ),
@@ -275,7 +278,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                                         child: TextField(
                                           controller: _codeController,
                                           style: GoogleFonts.syneMono(
-                                            fontSize: 48,
+                                            fontSize: screenSize.height/50,
                                             color: Colors.white,
                                           ),
                                           decoration: InputDecoration(
@@ -283,7 +286,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                                             fillColor: const Color.fromRGBO(230, 229, 202, 1),
                                             hintText: "Enter Code",
                                             hintStyle: GoogleFonts.syneMono(
-                                              fontSize: 48,
+                                              fontSize: screenSize.height/50,
                                               color: Colors.white,
                                             ),
                                           ),
@@ -303,7 +306,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                                           ),
                                           child: Text("Join",
                                               style: GoogleFonts.syneMono(
-                                                fontSize: 48,
+                                                fontSize: screenSize.height/50,
                                                 color: Colors.white,
                                               )
                                           ),
