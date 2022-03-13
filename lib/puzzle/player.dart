@@ -26,6 +26,11 @@ class Player {
     return getHeight() * position!.y!;
   }
 
+  Map toJson() => {
+    "x": position!.x,
+    "y": position!.y
+  };
+
   Widget getWidget() {
     return AnimatedPositioned(
       width: getWidth(),
@@ -37,8 +42,10 @@ class Player {
         child: Container(
           width: getWidth(),
           height: getHeight(),
-          decoration: BoxDecoration(
-            color: Colors.purple.withOpacity(0.2),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/MiniArella/arella_mini_forwards_1.png"),
+            )
           ),
         ),
       ),

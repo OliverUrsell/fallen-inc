@@ -1,8 +1,11 @@
 
+import 'dart:convert';
+
 import 'package:fallen_inc/puzzle/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../pubnub.dart';
 import 'block.dart';
 import 'block_widget.dart';
 
@@ -11,18 +14,56 @@ enum PuzzleMode{
   player
 }
 
+class SlideMove{
+  final int startX, startY, endX, endY;
+  SlideMove({
+    required this.startX,
+    required this.startY,
+    required this.endX,
+    required this.endY
+  });
+
+  Map toJson() => {
+    "startX": startX,
+    "startY": startY,
+    "endX": endX,
+    "endY": endY
+  };
+
+  factory SlideMove.fromJson(dynamic json) => SlideMove(
+    startX: json["startX"],
+    startY: json["startY"],
+    endX: json["endX"],
+    endY: json["endY"],
+  );
+}
+
+class PlayerMove {
+  final int x, y;
+
+  PlayerMove({required this.x, required this.y});
+
+  Map toJson() => {
+    "x": x,
+    "y": y,
+  };
+
+  factory PlayerMove.fromJson(dynamic json) => PlayerMove(
+    x: json["x"],
+    y: json["y"],
+  );
+
+}
+
 class Puzzle extends StatefulWidget {
   const Puzzle({
     Key? key,
-    required this.sizeX,
-    required this.sizeY,
     required this.sizeRatio,
     required this.initialBlocks,
     required this.player,
     required this.mode,
   }) : super(key: key);
 
-  final int sizeX, sizeY;
   final double sizeRatio;
   final List<List<Block?>> initialBlocks;
   final PuzzleMode mode;
@@ -72,13 +113,86 @@ class _PuzzleState extends State<Puzzle> {
 
   late Player player;
 
+  int get sizeX {
+    return blockPositions[0].length;
+  }
+
+  int get sizeY {
+    return blockPositions.length;
+  }
+
+  Map toJson() {
+    return {
+      "blockPositions": jsonEncode(blockPositions.map((List<Block?> row) {
+        return jsonEncode(row.map((Block? b) {
+          if (b == null){
+            return "null";
+          }
+          return b.toJson();
+        }).toList());
+      }).toList()),
+      "player": jsonEncode(player),
+    };
+  }
+
+  void fromJson(dynamic json){
+    setState(() {
+      List<List<Block?>> positions = [];
+      List<Block> blocks = [];
+      for (String row in jsonDecode(json["blockPositions"]) as List){
+        List<Block?> newRow = [];
+        for(dynamic block in jsonDecode(row)) {
+          if(block == "null"){
+            newRow.add(null);
+          } else {
+            Block blockObject = Block.fromJson(block, widget.mode == PuzzleMode.slider ? blockOnTap : null);
+            newRow.add(blockObject);
+            blocks.add(blockObject);
+          }
+        }
+
+        positions.add(newRow);
+      }
+      blockPositions = positions;
+      this.blocks = blocks;
+      dynamic decodedPlayer = jsonDecode(json["player"]);
+      player.position = getBlockInPosition(decodedPlayer["x"], decodedPlayer["y"]);
+    });
+  }
+
+  void sliderSubscription(envelope){
+    SlideMove move = SlideMove.fromJson(envelope.payload);
+    setBlockPosition(getBlockInPosition(move.startX, move.startY)!, move.endX, move.endY);
+  }
+
+  void playerSubscription(envelope){
+    PlayerMove move = PlayerMove.fromJson(envelope.payload);
+    setPlayerPosition(move.x, move.y);
+  }
+
   @override
   void initState() {
     super.initState();
     blockPositions = widget.initialBlocks;
     blocks = getAllBlocks();
     player = widget.player;
-    player.position = getBlockInPosition(0, widget.sizeY-1);
+    player.position = getBlockInPosition(0, sizeY-1);
+
+    PubNubInteractor.mono!.addMapListener((envelope) {
+      if (envelope.payload == "request"){
+        PubNubInteractor.mono!.publishMap(toJson());
+        return;
+      }
+      fromJson(envelope.payload);
+    });
+
+    if(widget.mode == PuzzleMode.player){
+      PubNubInteractor.mono!.addSliderListener(sliderSubscription);
+    } else {
+      PubNubInteractor.mono!.addPlayerListener(playerSubscription);
+    }
+
+    PubNubInteractor.mono!.publishMapRequest();
   }
 
   @override
@@ -89,9 +203,9 @@ class _PuzzleState extends State<Puzzle> {
 
   double getBlockSize(Size screenSize){
     if(screenSize.width < screenSize.height){
-      return (screenSize.height * widget.sizeRatio)/widget.sizeY;
+      return (screenSize.height * widget.sizeRatio)/sizeY;
     } else {
-      return (screenSize.width * widget.sizeRatio)/widget.sizeX;
+      return (screenSize.width * widget.sizeRatio)/sizeX;
     }
   }
 
@@ -129,11 +243,22 @@ class _PuzzleState extends State<Puzzle> {
     return movePlayer(1, 0);
   }
 
-  bool movePlayer(int x, y) => setPlayerPosition(player.position!.x! + x, player.position!.y! + y);
+  bool movePlayer(int x, int y) {
+    if(setPlayerPosition(player.position!.x! + x, player.position!.y! + y)){
 
-  bool setPlayerPosition(int x, y) {
+      PlayerMove move = PlayerMove(x: player.position!.x!, y: player.position!.y!);
 
-    if (x < 0 || x >= widget.sizeX || y < 0 || y >= widget.sizeY) return false;
+      PubNubInteractor.mono!.publishPlayer(move.toJson());
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool setPlayerPosition(int x, int y) {
+
+    if (x < 0 || x >= sizeX || y < 0 || y >= sizeY) return false;
 
     Block? newPosition = getBlockInPosition(x, y);
     if(newPosition == null) return false;
@@ -150,18 +275,23 @@ class _PuzzleState extends State<Puzzle> {
   bool selectedBlockLeft() => moveSelectedBlock(-1, 0);
   bool selectedBlockRight() => moveSelectedBlock(1, 0);
 
-  bool moveSelectedBlock(int x, y){
+  bool moveSelectedBlock(int x, int y){
     // Adds x and y to the position of the selected block
     if(selectedBlock == null) return false;
 
     if(!selectedBlock!.movable) return false;
 
-    return setBlockPosition(selectedBlock!, selectedBlock!.x! + x, selectedBlock!.y! + y);
+    SlideMove move = SlideMove(startX: selectedBlock!.x!, startY: selectedBlock!.y!, endX: selectedBlock!.x! + x, endY: selectedBlock!.y! + y);
+
+    if(setBlockPosition(selectedBlock!, selectedBlock!.x! + x, selectedBlock!.y! + y)){
+      PubNubInteractor.mono!.publishSlider(move.toJson());
+    }
+    return false;
   }
 
   bool setBlockPosition(Block block, int x, y) {
 
-    if (0 > x || x >= widget.sizeX || 0 > y || y >= widget.sizeY) return false;
+    if (0 > x || x >= sizeX || 0 > y || y >= sizeY) return false;
 
     // Returns False if the position isn't valid
     if (getBlockInPosition(x, y) != null) return false;
@@ -266,8 +396,8 @@ class _PuzzleState extends State<Puzzle> {
           children.add(player.getWidget());
 
           return SizedBox(
-            width: blockSize * widget.sizeX,
-            height: blockSize * widget.sizeY,
+            width: blockSize * sizeX,
+            height: blockSize * sizeY,
             child: Stack(
                 children: children,
             ),
