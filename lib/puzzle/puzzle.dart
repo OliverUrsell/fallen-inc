@@ -58,15 +58,12 @@ class PlayerMove {
 class Puzzle extends StatefulWidget {
   const Puzzle({
     Key? key,
-    required this.sizeX,
-    required this.sizeY,
     required this.sizeRatio,
     required this.initialBlocks,
     required this.player,
     required this.mode,
   }) : super(key: key);
 
-  final int sizeX, sizeY;
   final double sizeRatio;
   final List<List<Block?>> initialBlocks;
   final PuzzleMode mode;
@@ -115,6 +112,14 @@ class _PuzzleState extends State<Puzzle> {
   Block? selectedBlock;
 
   late Player player;
+
+  int get sizeX {
+    return blockPositions[0].length;
+  }
+
+  int get sizeY {
+    return blockPositions.length;
+  }
 
   Map toJson() {
     return {
@@ -171,7 +176,7 @@ class _PuzzleState extends State<Puzzle> {
     blockPositions = widget.initialBlocks;
     blocks = getAllBlocks();
     player = widget.player;
-    player.position = getBlockInPosition(0, widget.sizeY-1);
+    player.position = getBlockInPosition(0, sizeY-1);
 
     PubNubInteractor.mono!.addMapListener((envelope) {
       if (envelope.payload == "request"){
@@ -198,9 +203,9 @@ class _PuzzleState extends State<Puzzle> {
 
   double getBlockSize(Size screenSize){
     if(screenSize.width < screenSize.height){
-      return (screenSize.height * widget.sizeRatio)/widget.sizeY;
+      return (screenSize.height * widget.sizeRatio)/sizeY;
     } else {
-      return (screenSize.width * widget.sizeRatio)/widget.sizeX;
+      return (screenSize.width * widget.sizeRatio)/sizeX;
     }
   }
 
@@ -253,7 +258,7 @@ class _PuzzleState extends State<Puzzle> {
 
   bool setPlayerPosition(int x, int y) {
 
-    if (x < 0 || x >= widget.sizeX || y < 0 || y >= widget.sizeY) return false;
+    if (x < 0 || x >= sizeX || y < 0 || y >= sizeY) return false;
 
     Block? newPosition = getBlockInPosition(x, y);
     if(newPosition == null) return false;
@@ -286,7 +291,7 @@ class _PuzzleState extends State<Puzzle> {
 
   bool setBlockPosition(Block block, int x, y) {
 
-    if (0 > x || x >= widget.sizeX || 0 > y || y >= widget.sizeY) return false;
+    if (0 > x || x >= sizeX || 0 > y || y >= sizeY) return false;
 
     // Returns False if the position isn't valid
     if (getBlockInPosition(x, y) != null) return false;
@@ -391,8 +396,8 @@ class _PuzzleState extends State<Puzzle> {
           children.add(player.getWidget());
 
           return SizedBox(
-            width: blockSize * widget.sizeX,
-            height: blockSize * widget.sizeY,
+            width: blockSize * sizeX,
+            height: blockSize * sizeY,
             child: Stack(
                 children: children,
             ),

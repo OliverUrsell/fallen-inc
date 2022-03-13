@@ -1,8 +1,5 @@
-import 'package:fallen_inc/pubnub.dart';
-import 'package:fallen_inc/puzzle/block.dart';
-import 'package:fallen_inc/puzzle/player.dart';
-import 'package:fallen_inc/puzzle/puzzle.dart';
-import 'package:fallen_inc/puzzle/puzzle_page.dart';
+
+import 'package:fallen_inc/puzzle/levels.dart';
 import 'package:flutter/material.dart';
 
 import 'menus/character_selection.dart';
@@ -18,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    PubNubInteractor(code: "12345");
+    Levels();
 
     return MaterialApp(
       title: 'Fallen Inc',
@@ -37,38 +34,9 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-// class _MyHomePageState extends State<MyHomePage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const CharacterSelector();
-//   }
-// }
-
-
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return PuzzlePage(
-      puzzle: Puzzle(sizeX: 3, sizeY: 3, sizeRatio: 0.4, mode:PuzzleMode.player,
-        initialBlocks: [
-          [
-            Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false),),
-            Block(imagePath: "assets/Level1/FI_L1_down_right.png", movable: false),
-            Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false))
-          ],
-          [
-            Block(imagePath: "assets/Level1/FI_L1_left_right_finished.png", walls: const Walls(up:false, down: false)),
-            Block(imagePath: "assets/Level1/F1_L1_up_down_finished.png", walls: const Walls(left:false, right: false)),
-            Block(imagePath: "assets/Level1/FI_L1_left_right_finished.png", walls: const Walls(up:false, down: false))
-          ],
-          [
-            Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false)),
-            Block(imagePath: "assets/Level1/FI_L1_up_left_finished.png", walls: const Walls(right:false, down: false)),
-            null
-          ],
-        ],
-        player: Player(),
-      ),
-    );
+    return const CharacterSelector();
   }
 }

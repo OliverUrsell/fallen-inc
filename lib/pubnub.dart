@@ -1,5 +1,6 @@
 
 import 'dart:math';
+import 'package:fallen_inc/puzzle/puzzle.dart';
 import 'package:pubnub/pubnub.dart' as pn;
 
 class PubNubInteractor {
@@ -57,6 +58,28 @@ class PubNubInteractor {
     _pubnub!.publish('$code/slider', message);
   }
 
+  void setModeRequestSubscription(PuzzleMode mode){
+    _pubnub!.subscribe(channels: {'$code/mode'}).messages.listen((envelope) {
+      print("Received mode message");
+      print(envelope.payload);
+      if(envelope.payload == "request") {
+        if(mode == PuzzleMode.slider) {
+          _pubnub!.publish('$code/mode', "slider");
+        } else if (mode == PuzzleMode.player) {
+          _pubnub!.publish('$code/mode', "player");
+        }
+      }
+    });
+  }
+
+  void setModeResponseSubscription(Function(dynamic) f){
+    _pubnub!.subscribe(channels: {'$code/mode'}).messages.listen(f);
+  }
+
+  void sendModeRequest() {
+    _pubnub!.publish('$code/mode', "request");
+  }
+
   PubNubInteractor({this.code}){
 
     code ??= _generateRandomCode(4);
@@ -67,9 +90,9 @@ class PubNubInteractor {
     _pubnub = pn.PubNub(defaultKeyset: myKeyset);
 
 
-    _mapStream = _pubnub!.subscribe(channels: {'${code}/map'}).messages;
-    _playerStream = _pubnub!.subscribe(channels: {'${code}/player'}).messages;
-    _sliderStream = _pubnub!.subscribe(channels: {'${code}/slider'}).messages;
+    _mapStream = _pubnub!.subscribe(channels: {'$code/map'}).messages;
+    _playerStream = _pubnub!.subscribe(channels: {'$code/player'}).messages;
+    _sliderStream = _pubnub!.subscribe(channels: {'$code/slider'}).messages;
 
   }
 
