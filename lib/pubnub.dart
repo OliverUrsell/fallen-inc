@@ -54,7 +54,6 @@ class PubNubInteractor {
   }
 
   void publishSlider(Map message){
-    print("Publishing slider: $message");
     _pubnub!.publish('$code/slider', message);
   }
 
@@ -71,11 +70,6 @@ class PubNubInteractor {
     _mapStream = _pubnub!.subscribe(channels: {'${code}/map'}).messages;
     _playerStream = _pubnub!.subscribe(channels: {'${code}/player'}).messages;
     _sliderStream = _pubnub!.subscribe(channels: {'${code}/slider'}).messages;
-
-    addSliderListener((e) {
-      print("Recieved message: ");
-      print(e.payload);
-    });
 
   }
 

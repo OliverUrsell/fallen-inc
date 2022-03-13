@@ -14,9 +14,9 @@ enum PuzzleMode{
   player
 }
 
-class Move{
+class SlideMove{
   final int startX, startY, endX, endY;
-  Move({
+  SlideMove({
     required this.startX,
     required this.startY,
     required this.endX,
@@ -30,12 +30,29 @@ class Move{
     "endY": endY
   };
 
-  factory Move.fromJson(dynamic json) => Move(
+  factory SlideMove.fromJson(dynamic json) => SlideMove(
     startX: json["startX"],
     startY: json["startY"],
     endX: json["endX"],
     endY: json["endY"],
   );
+}
+
+class PlayerMove {
+  final int x, y;
+
+  PlayerMove({required this.x, required this.y});
+
+  Map toJson() => {
+    "x": x,
+    "y": y,
+  };
+
+  factory PlayerMove.fromJson(dynamic json) => PlayerMove(
+    x: json["x"],
+    y: json["y"],
+  );
+
 }
 
 class Puzzle extends StatefulWidget {
@@ -139,8 +156,13 @@ class _PuzzleState extends State<Puzzle> {
   }
 
   void sliderSubscription(envelope){
-    Move move = Move.fromJson(envelope.payload);
+    SlideMove move = SlideMove.fromJson(envelope.payload);
     setBlockPosition(getBlockInPosition(move.startX, move.startY)!, move.endX, move.endY);
+  }
+
+  void playerSubscription(envelope){
+    PlayerMove move = PlayerMove.fromJson(envelope.payload);
+    setPlayerPosition(move.x, move.y);
   }
 
   @override
@@ -161,6 +183,8 @@ class _PuzzleState extends State<Puzzle> {
 
     if(widget.mode == PuzzleMode.player){
       PubNubInteractor.mono!.addSliderListener(sliderSubscription);
+    } else {
+      PubNubInteractor.mono!.addPlayerListener(playerSubscription);
     }
 
     PubNubInteractor.mono!.publishMapRequest();
@@ -214,9 +238,20 @@ class _PuzzleState extends State<Puzzle> {
     return movePlayer(1, 0);
   }
 
-  bool movePlayer(int x, y) => setPlayerPosition(player.position!.x! + x, player.position!.y! + y);
+  bool movePlayer(int x, int y) {
+    if(setPlayerPosition(player.position!.x! + x, player.position!.y! + y)){
 
-  bool setPlayerPosition(int x, y) {
+      PlayerMove move = PlayerMove(x: player.position!.x!, y: player.position!.y!);
+
+      PubNubInteractor.mono!.publishPlayer(move.toJson());
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool setPlayerPosition(int x, int y) {
 
     if (x < 0 || x >= widget.sizeX || y < 0 || y >= widget.sizeY) return false;
 
@@ -241,7 +276,7 @@ class _PuzzleState extends State<Puzzle> {
 
     if(!selectedBlock!.movable) return false;
 
-    Move move = Move(startX: selectedBlock!.x!, startY: selectedBlock!.y!, endX: selectedBlock!.x! + x, endY: selectedBlock!.y! + y);
+    SlideMove move = SlideMove(startX: selectedBlock!.x!, startY: selectedBlock!.y!, endX: selectedBlock!.x! + x, endY: selectedBlock!.y! + y);
 
     if(setBlockPosition(selectedBlock!, selectedBlock!.x! + x, selectedBlock!.y! + y)){
       PubNubInteractor.mono!.publishSlider(move.toJson());
