@@ -93,4 +93,5 @@ flutter:
   assets:
     - assets/
     - assets/Level1/
+    - assets/Level2/
     - assets/MiniArella/

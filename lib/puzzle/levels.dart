@@ -1,5 +1,6 @@
 
 import 'block.dart';
+import 'guard.dart';
 
 class Levels {
   static Levels? mono;
@@ -13,7 +14,7 @@ class Levels {
     levels.add([
       [
         Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false),),
-        Block(imagePath: "assets/Level1/FI_L1_down_right.png", movable: false),
+        Block(imagePath: "assets/Level1/FI_L1_down_right.png", movable: false), // Goal
         Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false))
       ],
       [
@@ -25,6 +26,33 @@ class Levels {
         Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false)),
         Block(imagePath: "assets/Level1/FI_L1_up_left_finished.png", walls: const Walls(right:false, down: false)),
         null
+      ],
+    ]);
+
+    levels.add([
+      [
+        Block(imagePath: "assets/Level2/level_2_down_right.png", walls: const Walls(up:false, left: false)),
+        Block(imagePath: "assets/Level2/level_2_down_left.png", walls: const Walls(up:false, right: false)),
+        Block(imagePath: "assets/Level2/level_2_down_left.png", movable: false), // Goal
+        Block(imagePath: "assets/Level2/level_2_down_left.png", walls: const Walls(up:false, right: false)),
+      ],
+      [
+        Block(imagePath: "assets/Level2/level_2_up_down.png", walls: const Walls(left:false, right: false)),
+        Guard(imagePath: "assets/Level2/level 2 guard room.png"),
+        Block(imagePath: "assets/Level2/level_2_down_right.png", walls: const Walls(up:false, left: false)),
+        Block(imagePath: "assets/Level2/level_2_up_down.png", walls: const Walls(left:false, right: false)),
+      ],
+      [
+        Block(imagePath: "assets/Level2/level_2_up_down.png", walls: const Walls(left:false, right: false)),
+        Block(imagePath: "assets/Level2/level_2_left_right.png", walls: const Walls(up:false, down: false)),
+        null,
+        Block(imagePath: "assets/Level2/level_2_up_left.png", walls: const Walls(right:false, down: false)),
+      ],
+      [
+        Block(imagePath: "assets/Level2/level_2_up_right.png", walls: const Walls(left:false, down: false)),
+        null,
+        Block(imagePath: "assets/Level2/level_2_up_left.png", walls: const Walls(right:false, down: false)),
+        Block(imagePath: "assets/Level2/level_2_up_down.png", walls: const Walls(left:false, right: false)),
       ],
     ]);
 

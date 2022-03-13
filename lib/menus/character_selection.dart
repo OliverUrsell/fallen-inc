@@ -16,6 +16,8 @@ class CharacterSelector extends StatefulWidget {
 
 class _CharacterSelectorState extends State<CharacterSelector> {
 
+  final int startingLevelIndex = 0;
+
   BoxDecoration selectedDecoration = BoxDecoration(
     border: Border.all(
       width: 5,
@@ -51,7 +53,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
         context,
         MaterialPageRoute<void>(
           builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.4, mode:mode,
-            initialBlocks: Levels.mono!.levels[0],
+            initialBlocks: Levels.mono!.levels[startingLevelIndex],
             player: Player(),
           ),),
         ),
@@ -144,7 +146,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                                 context,
                                 MaterialPageRoute<void>(
                                   builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.4, mode:PuzzleMode.player,
-                                    initialBlocks: Levels.mono!.levels[0],
+                                    initialBlocks: Levels.mono!.levels[startingLevelIndex],
                                     player: Player(),
                                   ),),
                                 ),
@@ -202,7 +204,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                                 context,
                                 MaterialPageRoute<void>(
                                   builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.4, mode:PuzzleMode.slider,
-                                    initialBlocks: Levels.mono!.levels[0],
+                                    initialBlocks: Levels.mono!.levels[startingLevelIndex],
                                     player: Player(),
                                   ),),
                                 ),
