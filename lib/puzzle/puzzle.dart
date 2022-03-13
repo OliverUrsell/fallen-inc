@@ -14,6 +14,30 @@ enum PuzzleMode{
   player
 }
 
+class Move{
+  final int startX, startY, endX, endY;
+  Move({
+    required this.startX,
+    required this.startY,
+    required this.endX,
+    required this.endY
+  });
+
+  Map toJson() => {
+    "startX": startX,
+    "startY": startY,
+    "endX": endX,
+    "endY": endY
+  };
+
+  factory Move.fromJson(dynamic json) => Move(
+    startX: json["startX"],
+    startY: json["startY"],
+    endX: json["endX"],
+    endY: json["endY"],
+  );
+}
+
 class Puzzle extends StatefulWidget {
   const Puzzle({
     Key? key,
@@ -109,8 +133,14 @@ class _PuzzleState extends State<Puzzle> {
       }
       blockPositions = positions;
       this.blocks = blocks;
-      player = Player.fromJson(jsonDecode(json["player"]));
+      dynamic decodedPlayer = jsonDecode(json["player"]);
+      player.position = getBlockInPosition(decodedPlayer["x"], decodedPlayer["y"]);
     });
+  }
+
+  void sliderSubscription(envelope){
+    Move move = Move.fromJson(envelope.payload);
+    setBlockPosition(getBlockInPosition(move.startX, move.startY)!, move.endX, move.endY);
   }
 
   @override
@@ -128,6 +158,10 @@ class _PuzzleState extends State<Puzzle> {
       }
       fromJson(envelope.payload);
     });
+
+    if(widget.mode == PuzzleMode.player){
+      PubNubInteractor.mono!.addSliderListener(sliderSubscription);
+    }
 
     PubNubInteractor.mono!.publishMapRequest();
   }
@@ -201,13 +235,18 @@ class _PuzzleState extends State<Puzzle> {
   bool selectedBlockLeft() => moveSelectedBlock(-1, 0);
   bool selectedBlockRight() => moveSelectedBlock(1, 0);
 
-  bool moveSelectedBlock(int x, y){
+  bool moveSelectedBlock(int x, int y){
     // Adds x and y to the position of the selected block
     if(selectedBlock == null) return false;
 
     if(!selectedBlock!.movable) return false;
 
-    return setBlockPosition(selectedBlock!, selectedBlock!.x! + x, selectedBlock!.y! + y);
+    Move move = Move(startX: selectedBlock!.x!, startY: selectedBlock!.y!, endX: selectedBlock!.x! + x, endY: selectedBlock!.y! + y);
+
+    if(setBlockPosition(selectedBlock!, selectedBlock!.x! + x, selectedBlock!.y! + y)){
+      PubNubInteractor.mono!.publishSlider(move.toJson());
+    }
+    return false;
   }
 
   bool setBlockPosition(Block block, int x, y) {

@@ -1,6 +1,4 @@
 
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,13 +27,9 @@ class Player {
   }
 
   Map toJson() => {
-    "position": jsonEncode(position)
+    "x": position!.x,
+    "y": position!.y
   };
-
-  factory Player.fromJson(dynamic json){
-    // We can give a null function here since the plaer only uses the block for positioning
-    return Player(position: Block.fromJson(jsonDecode(json["position"]), (p0, p1) => null));
-  }
 
   Widget getWidget() {
     return AnimatedPositioned(

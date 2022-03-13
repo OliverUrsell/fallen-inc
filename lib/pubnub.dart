@@ -27,20 +27,35 @@ class PubNubInteractor {
     return randomString;
   }
 
-  Stream? _mapStream;
+  Stream? _mapStream, _playerStream, _sliderStream;
 
   void addMapListener(Function(dynamic) f){
     _mapStream!.listen(f);
   }
 
   void publishMap(Map message){
-    print("Publishing map");
     _pubnub!.publish('$code/map', message);
   }
 
   void publishMapRequest(){
-    print("Published Request");
     _pubnub!.publish('$code/map', "request");
+  }
+
+  void addPlayerListener(Function(dynamic) f){
+    _playerStream!.listen(f);
+  }
+
+  void publishPlayer(Map message){
+    _pubnub!.publish('$code/player', message);
+  }
+
+  void addSliderListener(Function(dynamic) f){
+    _sliderStream!.listen(f);
+  }
+
+  void publishSlider(Map message){
+    print("Publishing slider: $message");
+    _pubnub!.publish('$code/slider', message);
   }
 
   PubNubInteractor({this.code}){
@@ -54,6 +69,13 @@ class PubNubInteractor {
 
 
     _mapStream = _pubnub!.subscribe(channels: {'${code}/map'}).messages;
+    _playerStream = _pubnub!.subscribe(channels: {'${code}/player'}).messages;
+    _sliderStream = _pubnub!.subscribe(channels: {'${code}/slider'}).messages;
+
+    addSliderListener((e) {
+      print("Recieved message: ");
+      print(e.payload);
+    });
 
   }
 
