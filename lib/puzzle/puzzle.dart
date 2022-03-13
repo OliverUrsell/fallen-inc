@@ -5,6 +5,7 @@ import 'package:fallen_inc/puzzle/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../pubnub.dart';
 import 'block.dart';
 import 'block_widget.dart';
 
@@ -74,15 +75,41 @@ class _PuzzleState extends State<Puzzle> {
 
   late Player player;
 
-  Map toJson() => {
-    "blockPositions": jsonEncode(blockPositions),
-    "player": jsonEncode(player),
-  };
+  Map toJson() {
+    return {
+      "blockPositions": jsonEncode(blockPositions.map((List<Block?> row) {
+        return jsonEncode(row.map((Block? b) {
+          if (b == null){
+            return "null";
+          }
+          return b.toJson();
+        }).toList());
+      }).toList()),
+      "player": jsonEncode(player),
+    };
+  }
 
   void fromJson(dynamic json){
     setState(() {
-      blockPositions = json["blockPositions"];
-      player = Player.fromJson(json[player]);
+      List<List<Block?>> positions = [];
+      List<Block> blocks = [];
+      for (String row in jsonDecode(json["blockPositions"]) as List){
+        List<Block?> newRow = [];
+        for(dynamic block in jsonDecode(row)) {
+          if(block == "null"){
+            newRow.add(null);
+          } else {
+            Block blockObject = Block.fromJson(block, widget.mode == PuzzleMode.slider ? blockOnTap : null);
+            newRow.add(blockObject);
+            blocks.add(blockObject);
+          }
+        }
+
+        positions.add(newRow);
+      }
+      blockPositions = positions;
+      this.blocks = blocks;
+      player = Player.fromJson(jsonDecode(json["player"]));
     });
   }
 
@@ -93,6 +120,16 @@ class _PuzzleState extends State<Puzzle> {
     blocks = getAllBlocks();
     player = widget.player;
     player.position = getBlockInPosition(0, widget.sizeY-1);
+
+    PubNubInteractor.mono!.addMapListener((envelope) {
+      if (envelope.payload == "request"){
+        PubNubInteractor.mono!.publishMap(toJson());
+        return;
+      }
+      fromJson(envelope.payload);
+    });
+
+    PubNubInteractor.mono!.publishMapRequest();
   }
 
   @override

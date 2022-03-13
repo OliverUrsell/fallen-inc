@@ -15,11 +15,12 @@ class Walls{
   };
 
   factory Walls.fromJSON(dynamic json){
+    Map decodedJson = jsonDecode(json);
     return Walls(
-      left: json["left"] as bool,
-      up: json["up"] as bool,
-      right: json["right"] as bool,
-      down: json["down"] as bool,
+      left: decodedJson["left"] as bool,
+      up: decodedJson["up"] as bool,
+      right: decodedJson["right"] as bool,
+      down: decodedJson["down"] as bool,
     );
   }
 

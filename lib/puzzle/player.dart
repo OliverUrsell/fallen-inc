@@ -33,7 +33,8 @@ class Player {
   };
 
   factory Player.fromJson(dynamic json){
-    return Player(position: Block.fromJson(json["position"], (p0, p1) => null));
+    // We can give a null function here since the plaer only uses the block for positioning
+    return Player(position: Block.fromJson(jsonDecode(json["position"]), (p0, p1) => null));
   }
 
   Widget getWidget() {
@@ -47,8 +48,10 @@ class Player {
         child: Container(
           width: getWidth(),
           height: getHeight(),
-          decoration: BoxDecoration(
-            color: Colors.purple.withOpacity(0.2),
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/MiniArella/arella_mini_forwards_1.png"),
+            )
           ),
         ),
       ),

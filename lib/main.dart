@@ -1,8 +1,11 @@
+import 'package:fallen_inc/pubnub.dart';
 import 'package:fallen_inc/puzzle/block.dart';
-import 'package:fallen_inc/puzzle/puzzle.dart';
 import 'package:fallen_inc/puzzle/player.dart';
+import 'package:fallen_inc/puzzle/puzzle.dart';
 import 'package:fallen_inc/puzzle/puzzle_page.dart';
 import 'package:flutter/material.dart';
+
+import 'menus/character_selection.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +17,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    PubNubInteractor(code: "12345");
+
     return MaterialApp(
       title: 'Fallen Inc',
       theme: ThemeData(
@@ -43,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return PuzzlePage(
-      puzzle: Puzzle(sizeX: 3, sizeY: 3, sizeRatio: 0.4, mode:PuzzleMode.slider,
+      puzzle: Puzzle(sizeX: 3, sizeY: 3, sizeRatio: 0.4, mode:PuzzleMode.player,
         initialBlocks: [
           [
             Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false),),
