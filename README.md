@@ -1,16 +1,19 @@
-# fallen_inc
+# Fallen Inc
 
-A new Flutter project.
+This is an entry for the [Flutter Puzzle Hack](https://flutterhack.devpost.com/) play as Arella or
+Sofia. Arella moves through the map to reach the elevator goal. Sofia moves the tiles on the board
+to guide Arella to the exit
 
-## Getting Started
+## Installing
+This project requires [PubNub API](https://www.pubnub.com) keys to run from scratch, register as an account
+and replace `myKeyset` in `lib/pubnub.dart` as described in the 
+[PubNub Dart package page](https://pub.dev/packages/pubnub).
 
-This project is a starting point for a Flutter application.
+Run `flutter pub get` from the root directory to install required packages
 
-A few resources to get you started if this is your first Flutter project:
+## Running
+Run `flutter run -d web-server` to start a debug server, visit the link in stout to view the project.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Deployment
+Run `flutter build web` to build the web server, then, in `build/web` run `python -m http.server 8000`
+to start a http server, now visiting `localhost:8000` will run the project.
