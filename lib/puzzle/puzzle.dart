@@ -98,10 +98,14 @@ final leftKeySet = LogicalKeySet(
 final rightKeySet = LogicalKeySet(
   LogicalKeyboardKey.keyD,
 );
+final rKeySet = LogicalKeySet(
+  LogicalKeyboardKey.keyR,
+);
 class UpIntent extends Intent {}
 class DownIntent extends Intent {}
 class LeftIntent extends Intent {}
 class RightIntent extends Intent {}
+class RestartIntent extends Intent {}
 
 class _PuzzleState extends State<Puzzle> {
 
@@ -148,10 +152,15 @@ class _PuzzleState extends State<Puzzle> {
     setLevel(currentLevel! + 1);
   }
 
+  void restart(){
+    setLevel(currentLevel!);
+    PubNubInteractor.mono!.publishMap(toJson());
+  }
+
   void setLevel(int level){
     setState(() {
       currentLevel = level;
-      List<List<Block?>> newBlockPositions = Levels.mono!.levels[level];
+      List<List<Block?>> newBlockPositions = List.from(Levels.mono!.levels[level]);
       setBlockPositions(newBlockPositions);
       player.position = newBlockPositions[newBlockPositions.length-1][0];
       selectedBlock = null;
@@ -405,6 +414,8 @@ class _PuzzleState extends State<Puzzle> {
       };
     }
 
+    actions![RestartIntent] = CallbackAction(onInvoke: (e) => restart());
+
     return FocusableActionDetector(
       focusNode: _focusNode,
       shortcuts: {
@@ -416,6 +427,7 @@ class _PuzzleState extends State<Puzzle> {
         downKeySet: DownIntent(),
         leftKeySet: LeftIntent(),
         rightKeySet: RightIntent(),
+        rKeySet: RestartIntent()
       },
       actions: actions,
       child: Builder(
