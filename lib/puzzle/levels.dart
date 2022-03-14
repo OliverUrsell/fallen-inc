@@ -84,6 +84,82 @@ class Levels {
       ]
     ]);
 
+    levels.add([
+      [
+        Block(imagePath: "assets/Level4/level_4_left_right.png", walls: const Walls(down:false, up: false)),
+        null,
+        null,
+        Goal(),
+        null,
+      ],
+      [
+        Guard(imagePath: "assets/Level4/guard_room.png"),
+        null,
+        Block(imagePath: "assets/Level4/level_4_up_down.png", walls: const Walls(left:false, right: false)),
+        Block(imagePath: "assets/Level4/level_4_up_down.png", walls: const Walls(left:false, right: false)),
+        Block(imagePath: "assets/Level4/level_4_left_right.png", walls: const Walls(down:false, up: false)),
+      ],
+      [
+        Block(imagePath: "assets/Level4/level_4_down_right.png", walls: const Walls(left:false, up: false)),
+        null,
+        Block(imagePath: "assets/Level4/level_4_up_left.png", walls: const Walls(right:false, down: false)),
+        null,
+        Block(imagePath: "assets/Level4/level_4_up_left.png", walls: const Walls(right:false, down: false)),
+      ],
+      [
+        null,
+        Block(imagePath: "assets/Level4/level_4_up_down.png", walls: const Walls(left:false, right: false)),
+        Block(imagePath: "assets/Level4/level_4_left_right.png", walls: const Walls(down:false, up: false)),
+        Guard(imagePath: "assets/Level4/guard_room.png"),
+        Block(imagePath: "assets/Level4/level_4_up_down.png", walls: const Walls(left:false, right: false)),
+      ],
+      [
+        Block(imagePath: "assets/Level4/level_4_up_right.png", walls: const Walls(left:false, down: false)),
+        Block(imagePath: "assets/Level4/level_4_left_right.png", walls: const Walls(down:false, up: false)),
+        Block(imagePath: "assets/Level4/level_4_up_left.png", walls: const Walls(right:false, down: false)),
+        Block(imagePath: "assets/Level4/level_4_left_right.png", walls: const Walls(down:false, up: false)),
+        Guard(imagePath: "assets/Level4/guard_room.png"),
+      ]
+    ]);
+
+    levels.add([
+      [
+        Block(imagePath: "assets/Level5/level_5_up_left.png", walls: const Walls(right:false, down: false)),
+        null,
+        Block(imagePath: "assets/Level5/level_5_left_right.png", walls: const Walls(down:false, up: false)),
+        Goal(),
+        Block(imagePath: "assets/Level5/level_5_down_left.png", walls: const Walls(right:false, up: false)),
+      ],
+      [
+        Block(imagePath: "assets/Level5/level_5_left_right.png", walls: const Walls(down:false, up: false)),
+        Block(imagePath: "assets/Level5/level_5_up_left.png", walls: const Walls(right:false, down: false)),
+        Guard(imagePath: "assets/Level5/guard_room.png"),
+        Block(imagePath: "assets/Level5/level_5_left_right.png", walls: const Walls(down:false, up: false)),
+        Block(imagePath: "assets/Level5/level_5_up_down.png", walls: const Walls(left:false, right: false)),
+      ],
+      [
+        Block(imagePath: "assets/Level5/level_5_up_down.png", walls: const Walls(left:false, right: false)),
+        null,
+        Block(imagePath: "assets/Level5/level_5_up_left.png", walls: const Walls(right:false, down: false)),
+        null,
+        Block(imagePath: "assets/Level5/level_5_up_left.png", walls: const Walls(right:false, down: false)),
+      ],
+      [
+        Block(imagePath: "assets/Level5/level_5_down_right.png", walls: const Walls(left:false, up: false)),
+        Block(imagePath: "assets/Level5/level_5_up_down.png", walls: const Walls(left:false, right: false)),
+        Block(imagePath: "assets/Level5/level_5_up_right.png", walls: const Walls(left:false, down: false)),
+        Block(imagePath: "assets/Level5/level_5_left_right.png", walls: const Walls(down:false, up: false)),
+        Block(imagePath: "assets/Level5/level_5_left_right.png", walls: const Walls(down:false, up: false)),
+      ],
+      [
+        Block(imagePath: "assets/Level5/level_5_up_down.png", walls: const Walls(left:false, right: false)),
+        Block(imagePath: "assets/Level5/level_5_up_left.png", walls: const Walls(right:false, down: false)),
+        null,
+        Block(imagePath: "assets/Level5/level_5_up_left.png", walls: const Walls(right:false, down: false)),
+        Guard(imagePath: "assets/Level5/guard_room.png"),
+      ]
+    ]);
+
   }
 
 }
