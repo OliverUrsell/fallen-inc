@@ -57,6 +57,33 @@ class Levels {
       ],
     ]);
 
+    levels.add([
+      [
+        Block(imagePath: "assets/Level3/level_3_left_right.png", walls: const Walls(up:false, down: false)),
+        null,
+        Goal(),
+        Block(imagePath: "assets/Level3/level_3_up_down.png", walls: const Walls(left:false, right: false)),
+      ],
+      [
+        Block(imagePath: "assets/Level3/level_3_down_right.png", walls: const Walls(up:false, left: false)),
+        Block(imagePath: "assets/Level3/level_3_up_down.png", walls: const Walls(left:false, right: false)),
+        Block(imagePath: "assets/Level3/level_3_down_right.png", walls: const Walls(up:false, left: false)),
+        Guard(imagePath: "assets/Level3/guard_room.png"),
+      ],
+      [
+        null,
+        Block(imagePath: "assets/Level3/level_3_down_left.png", walls: const Walls(up:false, right: false)),
+        Block(imagePath: "assets/Level3/level_3_up_left.png", walls: const Walls(down:false, right: false)),
+        null
+      ],
+      [
+        Block(imagePath: "assets/Level3/level_3_up_right.png", walls: const Walls(down:false, left: false)),
+        Block(imagePath: "assets/Level3/level_3_up_left.png", walls: const Walls(down:false, right: false)),
+        Block(imagePath: "assets/Level3/level_3_up_down.png", walls: const Walls(left:false, right: false)),
+        Block(imagePath: "assets/Level3/level_3_up_left.png", walls: const Walls(down:false, right: false)),
+      ]
+    ]);
+
   }
 
 }
