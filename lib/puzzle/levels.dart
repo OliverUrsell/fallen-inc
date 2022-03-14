@@ -1,5 +1,6 @@
 
 import 'block.dart';
+import 'goal.dart';
 import 'guard.dart';
 
 class Levels {
@@ -14,7 +15,7 @@ class Levels {
     levels.add([
       [
         Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false),),
-        Block(imagePath: "assets/Level1/FI_L1_down_right.png", movable: false), // Goal
+        Goal(),
         Block(imagePath: "assets/Level1/FI_L1_down_right.png", walls: const Walls(up:false, left: false))
       ],
       [
@@ -33,7 +34,7 @@ class Levels {
       [
         Block(imagePath: "assets/Level2/level_2_down_right.png", walls: const Walls(up:false, left: false)),
         Block(imagePath: "assets/Level2/level_2_down_left.png", walls: const Walls(up:false, right: false)),
-        Block(imagePath: "assets/Level2/level_2_down_left.png", movable: false), // Goal
+        Goal(),
         Block(imagePath: "assets/Level2/level_2_down_left.png", walls: const Walls(up:false, right: false)),
       ],
       [

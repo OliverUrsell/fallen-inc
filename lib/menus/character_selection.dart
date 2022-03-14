@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../pubnub.dart';
-import '../puzzle/levels.dart';
 import '../puzzle/player.dart';
 import '../puzzle/puzzle.dart';
 
@@ -53,7 +52,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
         context,
         MaterialPageRoute<void>(
           builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.3, mode:mode,
-            initialBlocks: Levels.mono!.levels[startingLevelIndex],
+            initialLevel: startingLevelIndex,
             player: Player(),
           ),),
         ),
@@ -146,7 +145,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                                 context,
                                 MaterialPageRoute<void>(
                                   builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.3, mode:PuzzleMode.player,
-                                    initialBlocks: Levels.mono!.levels[startingLevelIndex],
+                                    initialLevel: startingLevelIndex,
                                     player: Player(),
                                   ),),
                                 ),
@@ -204,7 +203,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                                 context,
                                 MaterialPageRoute<void>(
                                   builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.3, mode:PuzzleMode.slider,
-                                    initialBlocks: Levels.mono!.levels[startingLevelIndex],
+                                    initialLevel: startingLevelIndex,
                                     player: Player(),
                                   ),),
                                 ),

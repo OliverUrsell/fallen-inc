@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import '../pubnub.dart';
 import 'block.dart';
 import 'block_widget.dart';
+import 'levels.dart';
 
 enum PuzzleMode{
   slider,
@@ -59,15 +60,15 @@ class Puzzle extends StatefulWidget {
   const Puzzle({
     Key? key,
     required this.sizeRatio,
-    required this.initialBlocks,
     required this.player,
     required this.mode,
+    this.initialLevel=0,
   }) : super(key: key);
 
   final double sizeRatio;
-  final List<List<Block?>> initialBlocks;
   final PuzzleMode mode;
   final Player player;
+  final int initialLevel;
 
   @override
   _PuzzleState createState() => _PuzzleState();
@@ -121,6 +122,8 @@ class _PuzzleState extends State<Puzzle> {
     return blockPositions.length;
   }
 
+  int? currentLevel;
+
   Map toJson() {
     return {
       "blockPositions": jsonEncode(blockPositions.map((List<Block?> row) {
@@ -132,13 +135,33 @@ class _PuzzleState extends State<Puzzle> {
         }).toList());
       }).toList()),
       "player": jsonEncode(player),
+      "level": currentLevel,
     };
+  }
+
+  void setBlockPositions(List<List<Block?>> blockPositions){
+    this.blockPositions = blockPositions;
+    blocks = getAllBlocks();
+  }
+
+  void nextLevel(){
+    setLevel(currentLevel! + 1);
+  }
+
+  void setLevel(int level){
+    setState(() {
+      currentLevel = level;
+      List<List<Block?>> newBlockPositions = Levels.mono!.levels[level];
+      setBlockPositions(newBlockPositions);
+      player.position = newBlockPositions[newBlockPositions.length-1][0];
+      selectedBlock = null;
+    });
   }
 
   void fromJson(dynamic json){
     setState(() {
+      currentLevel = json["level"];
       List<List<Block?>> positions = [];
-      List<Block> blocks = [];
       for (String row in jsonDecode(json["blockPositions"]) as List){
         List<Block?> newRow = [];
         for(dynamic block in jsonDecode(row)) {
@@ -147,14 +170,12 @@ class _PuzzleState extends State<Puzzle> {
           } else {
             Block blockObject = Block.fromJson(block, widget.mode == PuzzleMode.slider ? blockOnTap : null);
             newRow.add(blockObject);
-            blocks.add(blockObject);
           }
         }
 
         positions.add(newRow);
       }
-      blockPositions = positions;
-      this.blocks = blocks;
+      setBlockPositions(positions);
       dynamic decodedPlayer = jsonDecode(json["player"]);
       player.position = getBlockInPosition(decodedPlayer["x"], decodedPlayer["y"]);
     });
@@ -173,10 +194,8 @@ class _PuzzleState extends State<Puzzle> {
   @override
   void initState() {
     super.initState();
-    blockPositions = widget.initialBlocks;
-    blocks = getAllBlocks();
     player = widget.player;
-    player.position = getBlockInPosition(0, sizeY-1);
+    setLevel(widget.initialLevel);
 
     PubNubInteractor.mono!.addMapListener((envelope) {
       if (envelope.payload == "request"){
@@ -266,6 +285,18 @@ class _PuzzleState extends State<Puzzle> {
     setState(() {
       player.position = newPosition;
     });
+
+    if(newPosition.goal) {
+
+      if(widget.mode == PuzzleMode.player) {
+        PlayerMove move = PlayerMove(x: player.position!.x!, y: player.position!.y!);
+
+        PubNubInteractor.mono!.publishPlayer(move.toJson());
+      }
+
+      nextLevel();
+      return false;
+    }
 
     return true;
   }

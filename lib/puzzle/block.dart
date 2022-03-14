@@ -36,7 +36,7 @@ class Block {
 
   Walls walls;
 
-  bool selected, movable;
+  bool selected, movable, goal;
 
   Function(int, int)? onTap;
 
@@ -50,6 +50,7 @@ class Block {
     this.selected = false,
     this.onTap,
     this.movable = true,
+    this.goal = false,
   });
 
   BlockWidget getBlockWidget(){
@@ -72,7 +73,7 @@ class Block {
     "imagePath": imagePath,
     "walls": jsonEncode(walls),
     "movable": movable,
-
+    "goal": goal,
   };
 
   factory Block.fromJson(dynamic json, Function(int, int)? onTap) {
@@ -85,6 +86,7 @@ class Block {
       walls: Walls.fromJSON(json["walls"]),
       movable: json["movable"] as bool,
       selected: false,
+      goal: json["goal"],
       onTap: onTap
     );
   }
