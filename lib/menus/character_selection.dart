@@ -52,7 +52,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
       Navigator.push<void>(
         context,
         MaterialPageRoute<void>(
-          builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.4, mode:mode,
+          builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.3, mode:mode,
             initialBlocks: Levels.mono!.levels[startingLevelIndex],
             player: Player(),
           ),),
@@ -145,7 +145,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                               Navigator.push<void>(
                                 context,
                                 MaterialPageRoute<void>(
-                                  builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.4, mode:PuzzleMode.player,
+                                  builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.3, mode:PuzzleMode.player,
                                     initialBlocks: Levels.mono!.levels[startingLevelIndex],
                                     player: Player(),
                                   ),),
@@ -203,7 +203,7 @@ class _CharacterSelectorState extends State<CharacterSelector> {
                               Navigator.push<void>(
                                 context,
                                 MaterialPageRoute<void>(
-                                  builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.4, mode:PuzzleMode.slider,
+                                  builder: (BuildContext context) => PuzzlePage(puzzle: Puzzle(sizeRatio: 0.3, mode:PuzzleMode.slider,
                                     initialBlocks: Levels.mono!.levels[startingLevelIndex],
                                     player: Player(),
                                   ),),

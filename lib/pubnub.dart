@@ -60,8 +60,6 @@ class PubNubInteractor {
 
   void setModeRequestSubscription(PuzzleMode mode){
     _pubnub!.subscribe(channels: {'$code/mode'}).messages.listen((envelope) {
-      print("Received mode message");
-      print(envelope.payload);
       if(envelope.payload == "request") {
         if(mode == PuzzleMode.slider) {
           _pubnub!.publish('$code/mode', "slider");
@@ -82,7 +80,7 @@ class PubNubInteractor {
 
   PubNubInteractor({this.code}){
 
-    code ??= _generateRandomCode(4);
+    code ??= _generateRandomCode(8);
 
     assert(mono == null, "Can't have more than one PubNub instance");
     mono = this;
