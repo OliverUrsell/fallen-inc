@@ -16,6 +16,8 @@ class PubNubInteractor {
 
   pn.PubNub? _pubnub;
 
+  List<pn.Subscription> subscriptions = [];
+
   String _generateRandomCode(int length) {
 
     final _random = Random();
@@ -29,6 +31,18 @@ class PubNubInteractor {
   }
 
   Stream? _mapStream, _playerStream, _sliderStream;
+
+  Stream subscribe(String channel){
+    pn.Subscription subscription = _pubnub!.subscribe(channels: {channel});
+    subscriptions.add(subscription);
+    return subscription.messages;
+  }
+
+  void cancelAllSubscriptions(){
+    for (pn.Subscription subscription in subscriptions) {
+      subscription.cancel();
+    }
+  }
 
   void addMapListener(Function(dynamic) f){
     _mapStream!.listen(f);
@@ -59,7 +73,7 @@ class PubNubInteractor {
   }
 
   void setModeRequestSubscription(PuzzleMode mode){
-    _pubnub!.subscribe(channels: {'$code/mode'}).messages.listen((envelope) {
+    subscribe('$code/mode').listen((envelope) {
       if(envelope.payload == "request") {
         if(mode == PuzzleMode.slider) {
           _pubnub!.publish('$code/mode', "slider");
@@ -71,7 +85,7 @@ class PubNubInteractor {
   }
 
   void setModeResponseSubscription(Function(dynamic) f){
-    _pubnub!.subscribe(channels: {'$code/mode'}).messages.listen(f);
+    subscribe('$code/mode').listen(f);
   }
 
   void sendModeRequest() {
@@ -80,17 +94,18 @@ class PubNubInteractor {
 
   PubNubInteractor({this.code}){
 
-    code ??= _generateRandomCode(8);
+    code ??= _generateRandomCode(4);
 
-    assert(mono == null, "Can't have more than one PubNub instance");
+    if(mono != null) mono!.cancelAllSubscriptions();
+
     mono = this;
 
     _pubnub = pn.PubNub(defaultKeyset: myKeyset);
 
 
-    _mapStream = _pubnub!.subscribe(channels: {'$code/map'}).messages;
-    _playerStream = _pubnub!.subscribe(channels: {'$code/player'}).messages;
-    _sliderStream = _pubnub!.subscribe(channels: {'$code/slider'}).messages;
+    _mapStream = subscribe('$code/map');
+    _playerStream = subscribe('$code/player');
+    _sliderStream = subscribe('$code/slider');
 
   }
 
