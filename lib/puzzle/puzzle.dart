@@ -284,6 +284,26 @@ class _PuzzleState extends State<Puzzle> {
     }
   }
 
+  bool checkForGuards(Block playerPosition){
+    if(getBlockInPosition(playerPosition.x! + 1, playerPosition.y!) != null){
+      if(getBlockInPosition(playerPosition.x! + 1, playerPosition.y!)!.guard) return true;
+    }
+
+    if(getBlockInPosition(playerPosition.x! - 1, playerPosition.y!) != null){
+      if(getBlockInPosition(playerPosition.x! - 1, playerPosition.y!)!.guard) return true;
+    }
+
+    if(getBlockInPosition(playerPosition.x!, playerPosition.y! + 1) != null){
+      if(getBlockInPosition(playerPosition.x!, playerPosition.y! + 1)!.guard) return true;
+    }
+
+    if(getBlockInPosition(playerPosition.x!, playerPosition.y! - 1) != null){
+      if(getBlockInPosition(playerPosition.x!, playerPosition.y! - 1)!.guard) return true;
+    }
+
+    return false;
+  }
+
   bool setPlayerPosition(int x, int y) {
 
     if (x < 0 || x >= sizeX || y < 0 || y >= sizeY) return false;
@@ -305,6 +325,10 @@ class _PuzzleState extends State<Puzzle> {
 
       nextLevel();
       return false;
+    }
+
+    if(checkForGuards(newPosition)){
+      restart();
     }
 
     return true;
@@ -371,6 +395,7 @@ class _PuzzleState extends State<Puzzle> {
   }
 
   Block? getBlockInPosition(int x,y){
+    if(x<0 || y<0 || x>=blockPositions[0].length || y>=blockPositions.length) return null;
     return blockPositions[y][x];
   }
 

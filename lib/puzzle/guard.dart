@@ -11,6 +11,7 @@ class Guard extends Block{
     selected: false,
     onTap: null,
     movable: false,
+    guard: true
   );
 
 }
