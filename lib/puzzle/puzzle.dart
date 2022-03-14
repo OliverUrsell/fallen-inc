@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:fallen_inc/puzzle/player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../pubnub.dart';
 import 'block.dart';
@@ -111,6 +112,8 @@ class _PuzzleState extends State<Puzzle> {
 
   final FocusNode _focusNode = FocusNode();
 
+  bool finished = true;
+
   late List<List<Block?>> blockPositions;
   late List<Block> blocks;
 
@@ -159,6 +162,12 @@ class _PuzzleState extends State<Puzzle> {
 
   void setLevel(int level){
     setState(() {
+
+      if(Levels.mono!.levels.length <= level) {
+        finished = true;
+        return;
+      }
+
       currentLevel = level;
       List<List<Block?>> newBlockPositions = List.from(Levels.mono!.levels[level]);
       setBlockPositions(newBlockPositions);
@@ -441,7 +450,7 @@ class _PuzzleState extends State<Puzzle> {
 
     actions![RestartIntent] = CallbackAction(onInvoke: (e) => restart());
 
-    return FocusableActionDetector(
+    Widget output =  FocusableActionDetector(
       focusNode: _focusNode,
       shortcuts: {
         upArrowKeySet: UpIntent(),
@@ -473,5 +482,33 @@ class _PuzzleState extends State<Puzzle> {
         },
       ),
     );
+
+    if(!finished){
+      return output;
+    } else {
+      return Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(163, 161, 171, 1),
+              border: Border.all(
+                width: 10.0,
+                color: const Color.fromRGBO(25, 21, 49, 1),
+              ),
+            ),
+            padding: const EdgeInsets.all(5.0),
+            margin: const EdgeInsets.all(5.0),
+            child: Text("You beat the Game!",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.syneMono(
+                fontSize: screenSize.height/40,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          output,
+        ],
+      );
+    }
   }
 }

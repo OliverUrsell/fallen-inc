@@ -24,11 +24,15 @@ class _PuzzlePageState extends State<PuzzlePage> {
     switch(widget.puzzle.mode){
       case PuzzleMode.slider:
         instructions = """SOPHIA: INSTRUCTIONS
-CLICK A TILE AND MOVE IT INTO AN EMPTY SPACE WITH THE ARROW KEYS OR W, A, S, D TO CONNECT THE PATHS FOR ARELLA""";
+CLICK A TILE AND MOVE IT INTO AN EMPTY SPACE WITH THE ARROW KEYS OR W, A, S, D TO CONNECT THE PATHS FOR ARELLA
+PRESS R TO RESTART
+IF YOU GO ADJACENT TO A GUARD YOU LOSE""";
         break;
       case PuzzleMode.player:
         instructions = """ARELLA: INSTRUCTIONS
-MOVE ARELLA ALONG CONNECTING PATHS USING THE ARROW KEYS OR W, A, S, D TO REACH THE ELEVATOR TO THE NEXT FLOOR""";
+MOVE ARELLA ALONG CONNECTING PATHS USING THE ARROW KEYS OR W, A, S, D TO REACH THE ELEVATOR TO THE NEXT FLOOR
+PRESS R TO RESTART
+IF YOU GO ADJACENT TO A GUARD YOU LOSE""";
         break;
       default:
         instructions = "ERROR";
@@ -80,7 +84,7 @@ MOVE ARELLA ALONG CONNECTING PATHS USING THE ARROW KEYS OR W, A, S, D TO REACH T
               child: Text(instructions,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.syneMono(
-                  fontSize: screenSize.height/40,
+                  fontSize: screenSize.height/60,
                   color: Colors.white,
                 ),
               ),
