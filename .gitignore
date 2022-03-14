@@ -29,7 +29,9 @@
 .packages
 .pub-cache/
 .pub/
-/build/
+/build/51681d58183ab22e2531eaf2ba1c4662
+/build/c075001b96339384a97db4862b8ab8db.cache.dill.track.dill
+/build/flutter_assets
 
 # Web related
 lib/generated_plugin_registrant.dart
